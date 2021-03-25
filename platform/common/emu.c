@@ -836,9 +836,9 @@ char *emu_get_save_fname(int load, int is_sram, int slot, int *time)
 		const char *ext_main = (currentConfig.EmuOpt & EOPT_GZIP_SAVES) ? ".mds.gz" : ".mds";
 		const char *ext_othr = (currentConfig.EmuOpt & EOPT_GZIP_SAVES) ? ".mds" : ".mds.gz";
 		ext[0] = 0;
-		if (slot > 0 && slot < 10)
+		if (slot >= 0 && slot < 10)
 			sprintf(ext, ".%i", slot);
-		else if (slot==-1 && !load && !is_sram)
+		else if (slot==-1 && !load)
 			sprintf(ext, ".%%i");
 		strcat(ext, ext_main);
 
