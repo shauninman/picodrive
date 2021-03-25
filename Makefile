@@ -49,7 +49,7 @@ endif
 	LINKOUT ?= -o
 endif
 
-ifeq ("$(PLATFORM)",$(filter "$(PLATFORM)","gp2x" "opendingux" "rpi1"))
+ifeq ("$(PLATFORM)",$(filter "$(PLATFORM)","gp2x" "opendingux" "rpi1" "trimui"))
 # very small caches, avoid optimization options making the binary much bigger
 CFLAGS += -finline-limit=42 -fno-unroll-loops -fno-ipa-cp -ffast-math
 # this gets you about 20% better execution speed on 32bit arm/mips
@@ -81,6 +81,12 @@ endif
 endif
 
 -include Makefile.local
+
+ifeq "$(PLATFORM)" "trimui"
+OBJS += platform/opendingux/inputmap.o
+use_inputmap ?= 1
+PLATFORM := generic
+endif
 
 ifeq "$(PLATFORM)" "opendingux"
 
@@ -133,7 +139,7 @@ OBJS += platform/libpicofe/gl_platform.o
 USE_FRONTEND = 1
 endif
 ifeq "$(PLATFORM)" "generic"
-CFLAGS += -DSDL_OVERLAY_2X -DSDL_BUFFER_3X
+# CFLAGS += -DSDL_OVERLAY_2X -DSDL_BUFFER_3X # TRIMUI
 OBJS += platform/linux/emu.o platform/linux/blit.o # FIXME
 ifeq "$(use_inputmap)" "1"
 OBJS += platform/common/plat_sdl.o platform/opendingux/inputmap.o
@@ -310,6 +316,7 @@ ifeq ($(STATIC_LINKING), 1)
 else
 	$(LD) $(LINKOUT)$@ $^ $(LDFLAGS) $(LDLIBS)
 endif
+	$(STRIP) $@ # TRIMUI
 
 ifeq "$(PLATFORM)" "psp"
 PSPSDK ?= $(shell psp-config --pspsdk-path)
