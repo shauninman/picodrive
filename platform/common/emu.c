@@ -144,6 +144,8 @@ static void romfname_ext(char *dst, int dstlen, const char *prefix, const char *
 
 void emu_status_msg(const char *format, ...)
 {
+	return;
+	
 	va_list vl;
 	int ret;
 

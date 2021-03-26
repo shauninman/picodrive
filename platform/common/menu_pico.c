@@ -237,6 +237,8 @@ static void cdload_progress_cb(const char *fname, int percent)
 
 void menu_romload_prepare(const char *rom_name)
 {
+	return;
+	
 	const char *p = rom_name + strlen(rom_name);
 
 	while (p > rom_name && *p != '/')
@@ -256,6 +258,8 @@ void menu_romload_prepare(const char *rom_name)
 
 void menu_romload_end(void)
 {
+	return;
+	
 	PicoCartLoadProgressCB = NULL;
 	PicoCDLoadProgressCB = NULL;
 
@@ -351,7 +355,7 @@ me_bind_action emuctrl_actions[] =
 	{ "Volume Up        ", PEV_VOL_UP },
 	{ "Fast forward     ", PEV_FF },
 	{ "Reset Game       ", PEV_RESET },
-	{ "Enter Menu       ", PEV_MENU },
+	// { "Enter Menu       ", PEV_MENU },
 	{ "Pico Next page   ", PEV_PICO_PNEXT },
 	{ "Pico Prev page   ", PEV_PICO_PPREV },
 	{ "Pico Switch input", PEV_PICO_SWINP },
