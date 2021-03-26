@@ -10,3 +10,6 @@
 [submodule "platform/common/minimp3"]
 	path = platform/common/minimp3
 	url = https://github.com/lieff/minimp3
+[submodule "platform/libpicofe"]
+	path = platform/libpicofe
+	url = git@github.com:shauninman/libpicofe-picodrive.git
