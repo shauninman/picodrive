@@ -16,6 +16,7 @@
 
 #include "../libpicofe/input.h"
 #include "../libpicofe/plat.h"
+#include "../libpicofe/plat_sdl.h"
 #include "menu_pico.h"
 #include "emu.h"
 #include "version.h"
@@ -24,6 +25,10 @@
 #ifdef USE_LIBRETRO_VFS
 #include "file_stream_transforms.h"
 #endif
+
+#include <dlfcn.h>
+#include <mmenu.h> // wrap in extern "C" { } if adding to a .cpp file
+static void* mmenu = NULL;
 
 static int load_state_slot = -1;
 char **g_argv;
@@ -77,7 +82,6 @@ void parse_cmd_line(int argc, char *argv[])
 	}
 }
 
-
 int main(int argc, char *argv[])
 {
 	g_argv = argv;
@@ -111,14 +115,49 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-
+	
+	mmenu = dlopen("libmmenu.so", RTLD_LAZY);
+	
 	for (;;)
 	{
 		switch (engineState)
 		{
-			case PGS_Menu:
-				menu_loop();
-				break;
+			case PGS_Menu:{
+				if (mmenu) {
+					char* save_path = emu_get_save_fname(0, 0, -1, NULL);
+					ShowMenu_t ShowMenu = (ShowMenu_t)dlsym(mmenu, "ShowMenu");
+					MenuReturnStatus status = ShowMenu(rom_fname_reload, save_path, plat_sdl_screen, kMenuEventKeyDown);
+
+					if (status==kStatusExitGame) {
+						engineState = PGS_Quit;
+					}
+					else if (status==kStatusOpenMenu) {
+						menu_loop();
+					}
+					else if (status>=kStatusLoadSlot) {
+						state_slot = status - kStatusLoadSlot;
+						emu_save_load_game(1, 0);
+					}
+					else if (status>=kStatusSaveSlot) {
+						state_slot = status - kStatusSaveSlot;
+						emu_save_load_game(0, 0);
+					}
+					
+					if (status!=kStatusExitGame && status!=kStatusOpenMenu) {
+						// continue
+						engineState = PGS_Running;
+					}
+					
+					// release that menu key
+					SDL_Event sdlevent;
+					sdlevent.type = SDL_KEYUP;
+					sdlevent.key.keysym.sym = SDLK_ESCAPE;
+					SDL_PushEvent(&sdlevent);
+				}
+				else {
+					menu_loop();
+				}
+				} break;
 
 			case PGS_TrayMenu:
 				menu_loop_tray();

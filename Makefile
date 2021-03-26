@@ -87,6 +87,7 @@ OBJS += platform/opendingux/inputmap.o
 use_inputmap ?= 1
 PLATFORM := generic
 CFLAGS += -DSDL_SURFACE_SW
+LDLIBS += -lSDL_image -lSDL_ttf -ldl
 endif
 
 ifeq "$(PLATFORM)" "opendingux"
