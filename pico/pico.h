@@ -154,6 +154,7 @@ extern void (*PicoStateProgressCB)(const char *str);
 // cd/cdd.c
 int cdd_load(const char *filename, int type);
 int cdd_unload(void);
+int cdd_loaded(void);
 
 // Cart.c
 typedef enum

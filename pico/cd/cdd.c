@@ -501,6 +501,11 @@ int cdd_unload(void)
   return was_loaded;
 }
 
+int cdd_loaded(void)
+{
+	return cdd.loaded;
+}
+
 void cdd_read_data(uint8 *dst)
 {
   /* only read DATA track sectors */

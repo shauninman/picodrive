@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <unistd.h>
 #ifdef USE_SDL
 #include <SDL.h>
 #endif
@@ -82,6 +83,18 @@ void parse_cmd_line(int argc, char *argv[])
 	}
 }
 
+static void change_disc(char* path)
+{
+	if (cdd_loaded()) cdd_unload();
+
+	static char tmp[256];
+	strcpy(tmp, path);
+	rom_fname_reload = tmp;
+
+	engineState = PGS_RestartRun;
+	emu_swap_cd(path);
+}
+
 int main(int argc, char *argv[])
 {
 	g_argv = argv;
@@ -122,14 +135,34 @@ int main(int argc, char *argv[])
 	{
 		switch (engineState)
 		{
+			case PGS_TrayMenu:
 			case PGS_Menu:{
 				if (mmenu) {
 					char* save_path = emu_get_save_fname(0, 0, -1, NULL);
 					ShowMenu_t ShowMenu = (ShowMenu_t)dlsym(mmenu, "ShowMenu");
 					MenuReturnStatus status = ShowMenu(rom_fname_reload, save_path, plat_sdl_screen, kMenuEventKeyDown);
-
+					
+					engineState = PGS_Running;
+					
 					if (status==kStatusExitGame) {
 						engineState = PGS_Quit;
+					}
+					else if (status==kStatusChangeDisc && access("/tmp/change_disc", F_OK)==0) {
+						FILE* file = fopen("/tmp/change_disc", "r");
+						if (file) {
+							char line[256];
+							line[0] = 0;
+							while (fgets(line,256,file)!=NULL) {
+								int len = strlen(line);
+								if (len>0 && line[len-1]=='\n') line[len-1] = 0; // trim newline
+								if (strlen(line)==0) continue; // skip empty lines
+								if (access(line, F_OK)==0) break; // line is now the path to the requested disc
+							}
+							fclose(file);
+							if (strlen(line)>0) {
+								change_disc(line);
+							}
+						}
 					}
 					else if (status==kStatusOpenMenu) {
 						menu_loop();
@@ -143,11 +176,6 @@ int main(int argc, char *argv[])
 						emu_save_load_game(0, 0);
 					}
 					
-					if (status!=kStatusExitGame && status!=kStatusOpenMenu) {
-						// continue
-						engineState = PGS_Running;
-					}
-					
 					// release that menu key
 					SDL_Event sdlevent;
 					sdlevent.type = SDL_KEYUP;
@@ -155,13 +183,18 @@ int main(int argc, char *argv[])
 					SDL_PushEvent(&sdlevent);
 				}
 				else {
-					menu_loop();
+					if (engineState==PGS_TrayMenu) {
+						menu_loop_tray();
+					}
+					else {
+						menu_loop();
+					}
 				}
 				} break;
 
-			case PGS_TrayMenu:
-				menu_loop_tray();
-				break;
+			// case PGS_TrayMenu:
+			// 	menu_loop_tray();
+			// 	break;
 
 			case PGS_ReloadRom:
 				if (emu_reload_rom(rom_fname_reload))
