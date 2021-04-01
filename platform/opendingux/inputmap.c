@@ -9,7 +9,7 @@
 #include "../common/plat_sdl.h"
 
 const struct in_default_bind in_sdl_defbinds[] = {
-	{ SDLK_UP,	IN_BINDTYPE_PLAYER12, GBTN_UP },
+	{ SDLK_UP,		IN_BINDTYPE_PLAYER12, GBTN_UP },
 	{ SDLK_DOWN,	IN_BINDTYPE_PLAYER12, GBTN_DOWN },
 	{ SDLK_LEFT,	IN_BINDTYPE_PLAYER12, GBTN_LEFT },
 	{ SDLK_RIGHT,	IN_BINDTYPE_PLAYER12, GBTN_RIGHT },
@@ -19,30 +19,25 @@ const struct in_default_bind in_sdl_defbinds[] = {
 	{ SDLK_SPACE,	IN_BINDTYPE_PLAYER12, GBTN_C },		// A
 	{ SDLK_RETURN,	IN_BINDTYPE_PLAYER12, GBTN_START },	// START
 	{ SDLK_ESCAPE,	IN_BINDTYPE_EMU, PEVB_MENU },		// MENU
-	// { SDLK_TAB,		IN_BINDTYPE_EMU, PEVB_PICO_PPREV },
-	// { SDLK_BACKSPACE,	IN_BINDTYPE_EMU, PEVB_PICO_PNEXT },
-//	{ SDLK_BACKSPACE,	IN_BINDTYPE_EMU, PEVB_STATE_SAVE },
-//	{ SDLK_TAB,		IN_BINDTYPE_EMU, PEVB_STATE_LOAD },
-	// { SDLK_LSHIFT,	IN_BINDTYPE_EMU, PEVB_FF },		// X
 	{ 0, 0, 0 }
 };
 
 const struct menu_keymap in_sdl_key_map[] = {
-	{ SDLK_UP,	PBTN_UP },
-	{ SDLK_DOWN,	PBTN_DOWN },
-	{ SDLK_LEFT,	PBTN_LEFT },
-	{ SDLK_RIGHT,	PBTN_RIGHT },
-	{ SDLK_SPACE,	PBTN_MOK },	// A
-	{ SDLK_LCTRL,	PBTN_MBACK },	// B
-	{ SDLK_LSHIFT,	PBTN_MA2 },	// X
-	{ SDLK_LALT,	PBTN_MA3 },	// Y
-	{ SDLK_TAB,	PBTN_L },
+	{ SDLK_UP,			PBTN_UP },
+	{ SDLK_DOWN,		PBTN_DOWN },
+	{ SDLK_LEFT,		PBTN_LEFT },
+	{ SDLK_RIGHT,		PBTN_RIGHT },
+	{ SDLK_SPACE,		PBTN_MOK },		// A
+	{ SDLK_LCTRL,		PBTN_MBACK },	// B
+	{ SDLK_LSHIFT,		PBTN_MA2 },		// X
+	{ SDLK_LALT,		PBTN_MA3 },		// Y
+	{ SDLK_TAB,			PBTN_L },
 	{ SDLK_BACKSPACE,	PBTN_R },
 };
 const int in_sdl_key_map_sz = sizeof(in_sdl_key_map) / sizeof(in_sdl_key_map[0]);
 
 const struct menu_keymap in_sdl_joy_map[] = {
-	{ SDLK_UP,	PBTN_UP },
+	{ SDLK_UP,		PBTN_UP },
 	{ SDLK_DOWN,	PBTN_DOWN },
 	{ SDLK_LEFT,	PBTN_LEFT },
 	{ SDLK_RIGHT,	PBTN_RIGHT },

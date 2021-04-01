@@ -17,6 +17,7 @@
 #include "../libpicofe/plat.h"
 #include "../libpicofe/lprintf.h"
 #include "config_file.h"
+#include "input_pico.h"
 
 #ifdef USE_LIBRETRO_VFS
 #include "file_stream_transforms.h"
@@ -438,6 +439,8 @@ static void keys_parse_all(FILE *f)
 		mystrip(var + 5);
 		in_config_bind_key(dev_id, var + 5, acts, type);
 	}
+	
+	in_config_bind_key(dev_id, "MENU", PEV_MENU, IN_BINDTYPE_EMU); // TRIMUI
 	in_clean_binds();
 }
 

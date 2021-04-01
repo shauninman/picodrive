@@ -355,7 +355,7 @@ me_bind_action emuctrl_actions[] =
 	{ "Volume Up        ", PEV_VOL_UP },
 	{ "Fast forward     ", PEV_FF },
 	{ "Reset Game       ", PEV_RESET },
-	// { "Enter Menu       ", PEV_MENU },
+	// { "Enter Menu       ", PEV_MENU }, // TRIMUI
 	{ "Pico Next page   ", PEV_PICO_PNEXT },
 	{ "Pico Prev page   ", PEV_PICO_PPREV },
 	{ "Pico Switch input", PEV_PICO_SWINP },
