@@ -128,6 +128,12 @@ int main(int argc, char *argv[])
 	if (argc > 1)
 		parse_cmd_line(argc, argv);
 
+	mmenu = dlopen("libmmenu.so", RTLD_LAZY);
+	if (mmenu) {
+		ResumeSlot_t ResumeSlot = (ResumeSlot_t)dlsym(mmenu, "ResumeSlot");
+		if (ResumeSlot) load_state_slot = ResumeSlot();
+	}
+
 	if (engineState == PGS_ReloadRom)
 	{
 		if (emu_reload_rom(rom_fname_reload)) {
@@ -139,7 +145,6 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	mmenu = dlopen("libmmenu.so", RTLD_LAZY);
 	
 	for (;;)
 	{
