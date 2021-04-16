@@ -95,16 +95,6 @@ static void change_disc(char* path)
 	emu_swap_cd(path);
 }
 
-static void get_file(char* path, char* buffer) {
-	FILE *file = fopen(path, "r");
-	fseek(file, 0L, SEEK_END);
-	size_t size = ftell(file);
-	rewind(file);
-	fread(buffer, sizeof(char), size, file);
-	fclose(file);
-	buffer[size] = '\0';
-}
-
 int main(int argc, char *argv[])
 {
 	g_argv = argv;
@@ -156,15 +146,16 @@ int main(int argc, char *argv[])
 					char* save_path = emu_get_save_fname(0, 0, -1, NULL);
 					ShowMenu_t ShowMenu = (ShowMenu_t)dlsym(mmenu, "ShowMenu");
 					MenuReturnStatus status = ShowMenu(rom_fname_reload, save_path, plat_sdl_screen, kMenuEventKeyDown);
-					
+
+					char disc_path[256];
+					ChangeDisc_t ChangeDisc = (ChangeDisc_t)dlsym(mmenu, "ChangeDisc");
+										
 					engineState = PGS_Running;
 					
 					if (status==kStatusExitGame) {
 						engineState = PGS_Quit;
 					}
-					else if (status==kStatusChangeDisc && access("/tmp/change_disc.txt", F_OK)==0) {
-						char disc_path[256];
-						get_file("/tmp/change_disc.txt", disc_path);
+					else if (status==kStatusChangeDisc && ChangeDisc(disc_path)) {
 						change_disc(disc_path);
 					}
 					else if (status==kStatusOpenMenu) {
