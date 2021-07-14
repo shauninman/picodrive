@@ -102,6 +102,7 @@ set_platform()
   trimui)
 	sound_drivers="sdl"
     ARCH=arm
+	CFLAGS="$CFLAGS -D__TRIMUI__"
     optimize_arm926ej="yes"
     ;;
   pandora)

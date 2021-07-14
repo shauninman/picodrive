@@ -703,7 +703,7 @@ int emu_write_config(int is_game)
 	lprintf("emu_write_config: %s ", cfg);
 	ret = config_write(cfg);
 	if (write_lrom) config_writelrom(cfg);
-#ifdef __GP2X__
+#if defined(__GP2X__) || defined(__TRIMUI__)
 	sync();
 #endif
 	lprintf((ret == 0) ? "(ok)\n" : "(failed)\n");
@@ -939,7 +939,7 @@ int emu_save_load_game(int load, int sram)
 				ret = fwrite(sram_data, 1, sram_size, sramFile);
 				ret = (ret != sram_size) ? -1 : 0;
 				fclose(sramFile);
-#ifdef __GP2X__
+#if defined(__GP2X__) || defined(__TRIMUI__)
 				sync();
 #endif
 			}
@@ -950,8 +950,10 @@ int emu_save_load_game(int load, int sram)
 	{
 		ret = PicoState(saveFname, !load);
 		if (!ret) {
-#ifdef __GP2X__
-			if (!load) sync();
+#if defined(__GP2X__) || defined(__TRIMUI__)
+			if (!load) {
+				sync();
+			}
 #endif
 			emu_status_msg(load ? "STATE LOADED" : "STATE SAVED");
 		} else {
@@ -1289,7 +1291,7 @@ void emu_finish(void)
 		char cfg[512];
 		make_config_cfg(cfg);
 		config_writelrom(cfg);
-#ifdef __GP2X__
+#if defined(__GP2X__) || defined(__TRIMUI__)
 		sync();
 #endif
 	}
